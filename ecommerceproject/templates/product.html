@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metadescription %}
+    {{ product.description|truncatewords:155 }}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ product.name }} --META store
+    {% else %}
+        {{ product.name }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card" style="height: 400px;">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img" style="height: 100%;">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h1 class="card-title">{{ product.name }}</h1>
+                    <p class="card-text lead">${{ product.price }}</p>
+                    <p class="card-text text-justify my_prod_text">{{ product.description }}</p>
+                    {% if product.stock <= 0 %}
+                        <p class="card-text text-danger"><b> Out of stock</b></p>
+                    {% else %}
+                        <a class="btn btn-primary" href="{% url 'cart:add_cart' product.id %}">Add to Cart</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

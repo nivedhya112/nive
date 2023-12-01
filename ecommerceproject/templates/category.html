@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+        {{category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to META store where you can find all your grocery items
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{ category.name }} --META store
+    {% else %}
+        see our organic products --META store
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if category %}
+    <div>
+        <div class="row my_row_class">
+            <div class="mx-auto">
+                <p><a href="{% url 'shop:allProdCat' %}">OUR PRODUCTS</a></p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<div class="mx_auto">
+    {% if category %}
+        <div>
+            <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}" style="width: 100%; height: 400px;">
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">{{category.name}}</h1>
+            <p class="text-justify">{{category.description}}</p>
+        </div>
+    {% else %}
+        <div>
+            <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="our products" style="width: 100%; height: 250px;">
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">Our Products</h1>
+            <p class="text-justify">Welcome to META – Your Ultimate Grocery Shopping Experience! META is not just a grocery store; it's a curated online marketplace designed to elevate your shopping journey. Step into a world where convenience meets quality, and explore a vast array of fresh produce, pantry essentials, and specialty items from the comfort of your home.</p>
+        </div>
+    {% endif %}
+</div>
+
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+            <div class="my_bottom_margin col-12 col-sm-6 col-md-4">
+                <div class="card text-center" style="min-width: 14rem; height: 100%;">
+                    <a href="{{product.get_url}}">
+                        <img class="card-img-top my_image" src="{{product.image.url}}" alt="{{product.name}}">
+                    </a>
+                    <div class="card-body">
+                        <h4>{{product.name}}</h4>
+                        <p>{{product.price}}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div  class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+
+        <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+              <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+    <br>
+</div>
+{% endblock %}
